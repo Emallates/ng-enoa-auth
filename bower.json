@@ -1,0 +1,20 @@
+{
+  "name": "ng-enoa-auth",
+  "authors": [
+    "Ahsan Mustafa (ahsan@emallates.com)", "Nauman Ramzan (nomi@emallates.com)"
+  ],
+  "description": "Token-based AngularJS Authentication",
+  "main": "./src/ng-enoa-auth.js",
+  "keywords": [
+    "Authentication"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

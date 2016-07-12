@@ -1,0 +1,24 @@
+{
+  "name": "ng-enoa-auth",
+  "version": "0.0.1",
+  "description": "Token-based AngularJS Authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emallates/ng-enoa-auth.git"
+  },
+  "keywords": [
+    "Authentication"
+  ],
+  "authors": [
+    "Ahsan Mustafa (ahsan@emallates.com)", "Nauman Ramzan (nomi@emallates.com)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Emallates/ng-enoa-auth/issues"
+  },
+  "homepage": "https://github.com/Emallates/ng-enoa-auth#readme"
+}

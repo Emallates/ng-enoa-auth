@@ -1,0 +1,1 @@
+module.exports = require("./src/ng-enoa-auth.js");
