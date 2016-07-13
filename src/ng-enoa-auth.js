@@ -39,7 +39,7 @@ mod.factory('$auth', ['$rootScope', '$authConfig', 'store', function($rootScope,
 	return {
 
 		user: store.getObject($authConfig.key, false)
-		, token: store.get($authConfig.key, false)
+		, token: store.get($authConfig.token, false)
 		
 		, logout : function(userObj){ 
 			store.remove($authConfig.token); store.remove($authConfig.key); 
