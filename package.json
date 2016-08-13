@@ -1,6 +1,6 @@
 {
   "name": "ng-enoa-auth",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Token-based AngularJS Authentication",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "Authentication"
   ],
   "authors": [
-    "Ahsan Mustafa (ahsan@emallates.com)", "Nauman Ramzan (nomi@emallates.com)"
+    "Ahsan Mustafa (ahsan@emallates.com)",
+    "Nauman Ramzan (nomi@emallates.com)"
   ],
   "license": "MIT",
   "bugs": {
