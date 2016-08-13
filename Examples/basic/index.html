@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title></title>
+</head>
+<body ng-controller="ctrl">
+
+	{{msg}}
+
+
+
+	<script type="text/javascript" src="https://npmcdn.com/angular@latest/angular.min.js"></script>
+	<script type="text/javascript" src="../../src/ng-enoa-auth.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('app', ['ng-enoa-auth']);
+		app.controller('ctrl', ['$scope','$auth', '$http', function($scope, $auth, $http){
+			// $auth.logout();
+			// $auth.login({}, "auth_token");
+			// $http.get('http://jsonplaceholder.typicode.com/posts/1').then(
+			$http.get('http://127.0.0.1:3000/get/200').then(
+				function (resp){
+					if(resp.config.headers.Authorization === 'Bearer auth_token') console.log('Working...!');
+					$scope.msg = resp.data;
+				}
+				, function (err){}
+			);
+		}])
+	</script>
+</body>
+</html>

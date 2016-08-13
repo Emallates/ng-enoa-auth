@@ -46,6 +46,9 @@ mod.factory('$auth', ['$rootScope', '$authConfig', 'store', function($rootScope,
 			this.user = this.token = false;
 			$rootScope.$broadcast('ng-auth-bearer:logout', userObj);
 		}
+		, setToken: function(token){
+			if(token){ this.token = token; store.set($authConfig.token, token); }
+		}
 		, login: function(userObj, token){
 			if(token){ this.token = token; store.set($authConfig.token, token); }
 			if(userObj){ this.user = userObj; store.set($authConfig.key, userObj); }
@@ -85,7 +88,12 @@ mod.factory('TokenInterceptor', ['$q','$auth', '$authConfig'
         return config;
       },
       requestError: function(rejection) {return $q.reject(rejection);},
-      response: function (response) { return response || $q.when(response); },
+      response: function (response) {
+      	var headers = response.headers();
+      	var key = $authConfig.headerKey.toLowerCase();      	
+      	if(headers[key]) $auth.setToken(headers[key]);
+      	return response || $q.when(response);
+      },
       responseError: function(rejection) { 
         if(rejection.status == 401) $authConfig.onAuthFail(rejection);
         return $q.reject(rejection); 
