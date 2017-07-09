@@ -14,4 +14,5 @@ Setup
 
 ### Usage
 
-    var app = angular.module("app",['ng-auth-bearer']);
+    var app = angular.module("app",['ng-enoa-auth']);
+Thats it. You dont need to do anything else.

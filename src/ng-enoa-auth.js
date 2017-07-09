@@ -81,6 +81,7 @@ mod.factory('TokenInterceptor', ['$q','$auth', '$authConfig'
   ,function ($q, $auth, $authConfig) {
     return {
       request: function (config) {
+        if (config.auth === false) return config;
         config.headers = config.headers || {};
         if ($auth.token){
             config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
