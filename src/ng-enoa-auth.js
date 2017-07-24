@@ -8,7 +8,7 @@
 *
 **/
 var mod = angular.module('ng-enoa-auth', []);
-mod.config(['$httpProvider',function($httpProvider) { $httpProvider.interceptors.push('TokenInterceptor'); }]);
+// mod.config(['$httpProvider', function($httpProvider) { $httpProvider.interceptors.push('TokenInterceptor'); }]);
 mod.provider("$authConfig", function () {
 	var _DATA = {
 	  _PREFIX: 'enoa'
@@ -77,27 +77,86 @@ mod.factory('store', ['$window', function($window){
 	};
 }]);
 
-mod.factory('TokenInterceptor', ['$q','$auth', '$authConfig'
-  ,function ($q, $auth, $authConfig) {
-    return {
-      request: function (config) {
-        if (config.auth === false) return config;
-        config.headers = config.headers || {};
-        if ($auth.token){
-            config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
-        }
-        return config;
-      },
-      requestError: function(rejection) {return $q.reject(rejection);},
-      response: function (response) {
-      	var headers = response.headers();
-      	var key = $authConfig.headerKey.toLowerCase();      	
-      	if(headers[key]) $auth.setToken(headers[key]);
-      	return response || $q.when(response);
-      },
-      responseError: function(rejection) { 
-        if(rejection.status == 401) $authConfig.onAuthFail(rejection);
-        return $q.reject(rejection); 
-      }
-    };
-}]);
+// mod.factory('TokenInterceptor', ['$q','$auth', '$authConfig'
+//   ,function ($q, $auth, $authConfig) {
+//     return {
+//       request: function (config) {
+//         if (config.auth === false) return config;
+//         config.headers = config.headers || {};
+//         if ($auth.token){
+//             config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
+//         }
+//         return config;
+//       },
+//       requestError: function(rejection) {return $q.reject(rejection);},
+//       response: function (response) {
+//       	var headers = response.headers();
+//       	var key = $authConfig.headerKey.toLowerCase();      	
+//       	if(headers[key]) $auth.setToken(headers[key]);
+//       	return response || $q.when(response);
+//       },
+//       responseError: function(rejection) { 
+//         if(rejection.status == 401) $authConfig.onAuthFail(rejection);
+//         return $q.reject(rejection); 
+//       }
+//     };
+// }]);
+
+mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $aut, $authConfig) {
+  /**
+   * @todo Use functions link with Request
+   */
+  return {
+    Request: Request,
+    'get': function(url, configs) {
+      return Request('GET', url, null, configs)
+    },
+    'head': function(url, configs) {
+      return Request('HEAD', url, null, configs)
+    },
+    'post': function(url, data, configs) {
+      return Request('POST', url, data, configs)
+    },
+    'put': function(url, data, configs) {
+      return Request('PUT', url, data, configs)
+    },
+    'delete': function(url, configs) {
+      return Request('DELETE', url, null, configs)
+    },
+    'jsonp': function(url, configs) {
+      return Request('JSONP', url, null configs)
+    },
+    'patch': function(url, data, configs) {
+      return Request('PATCH', url, configs)
+    }
+  };
+
+  function Request(method, url, data, configs) {
+    configs.headers = configs.headers || {};
+    if (config.auth === false) return config;
+    if ($auth.token) {
+      config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
+    }
+
+    return $http({
+      url: url,
+      data: data,
+      cache: configs.cache,
+      method: method,
+      params: configs.params,
+      timeout: configs.timeout,
+      headers: configs.headers,
+      responseType: configs.responseType,
+      eventHandlers: configs.eventHandlers,
+      xsrfHeaderName: configs.xsrfHeaderName,
+      xsrfCookieName: configs.xsrfCookieName,
+      paramSerializer: configs.paramSerializer,
+      withCredentials: configs.withCredentials,
+      transformRequest: configs.transformRequest,
+      transformResponse: configs.transformResponse,
+      uploadEventHandlers: configs.uploadEventHandlers
+    })
+  }
+
+
+}])
