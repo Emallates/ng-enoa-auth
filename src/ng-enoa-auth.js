@@ -32,7 +32,7 @@ mod.provider("$authConfig", function () {
     setHeaderKey: function (token) { _DATA.headerKey = token; },
     setHeaderPrefix: function (prefix) { _DATA.headerPrefix = prefix; },
     $get: function () { return _DATA; }
-  };
+  }
 });
 
 mod.factory('$auth', ['$rootScope', '$authConfig', 'store', function($rootScope, $authConfig, store){
@@ -69,12 +69,11 @@ mod.factory('store', ['$window', function($window){
 		, remove: function(key){ $window.localStorage.removeItem(key); }
 		, get: function(key, defaultValue) { return $window.localStorage[key] || defaultValue; }
 		, getObject: function(key, defaultValue){
-
 			var value = $window.localStorage[key];
 			if(!value) value = (defaultValue != undefined) ? defaultValue : {};
 			return JSON.parse(value);
 		}
-	};
+	}
 }]);
 
 // mod.factory('TokenInterceptor', ['$q','$auth', '$authConfig'
@@ -129,14 +128,14 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
     'patch': function(url, data, configs) {
       return Request('PATCH', url, configs)
     }
-  };
+  }
 
   function Request(method, url, data, configs) {
     configs.headers = configs.headers || {};
     if ($auth.token && (config.auth !== false)) {
       config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
     }
-    
+
     return $http({
       url: url,
       data: data,
@@ -156,5 +155,4 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
       uploadEventHandlers: configs.uploadEventHandlers
     })
   }
-
-}])
+}]);
