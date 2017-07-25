@@ -32,8 +32,7 @@ mod.provider("$authConfig",[ function () {
     setAuthFail: function (fun) { 
       if(typeof fun == 'function'){
         _DATA.onAuthFail = fun;
-      } else 
-      console.log('Usage:setAuthFail parameter must be a function');
+      }
     },
     setHeaderKey: function (token) { _DATA.headerKey = token; },
     setHeaderPrefix: function (prefix) { _DATA.headerPrefix = prefix; },
@@ -107,12 +106,12 @@ mod.factory('store', ['$window', function($window){
 //     };
 // }]);
 
-mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $aut, $authConfig) {
+mod.factory('http', ['$http', '$auth', '$authConfig', function ($http, $auth, $authConfig) {
   /**
    * @todo Use functions link with Request
    */
   return {
-    Request: Request,
+    '$http': Request,
     'get': function(url, configs) {
       return Request('GET', url, null, configs)
     },
@@ -132,33 +131,34 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
       return Request('JSONP', url, null, configs)
     },
     'patch': function(url, data, configs) {
-      return Request('PATCH', url, configs)
+      return Request('PATCH', url, data, configs)
     }
   }
 
   function Request(method, url, data, configs) {
-    configs.headers = configs.headers || {};
-    if ($auth.token && (config.auth !== false)) {
-      config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
-    }
-
-    return $http({
+    configs = configs || {};
+    var keys = [
+      'cache', 'params', 'timeout', 'headers', 'responseType', 'eventHandlers', 'xsrfHeaderName',
+      'xsrfCookieName', 'paramSerializer', 'withCredentials', 'transformRequest', 'transformResponse', 'uploadEventHandlers'
+    ];
+    var request = {
       url: url,
-      data: data,
-      cache: configs.cache,
       method: method,
-      params: configs.params,
-      timeout: configs.timeout,
-      headers: configs.headers,
-      responseType: configs.responseType,
-      eventHandlers: configs.eventHandlers,
-      xsrfHeaderName: configs.xsrfHeaderName,
-      xsrfCookieName: configs.xsrfCookieName,
-      paramSerializer: configs.paramSerializer,
-      withCredentials: configs.withCredentials,
-      transformRequest: configs.transformRequest,
-      transformResponse: configs.transformResponse,
-      uploadEventHandlers: configs.uploadEventHandlers
-    })
+    };
+    if (data) {
+      request.data = data;
+    }
+    if (configs) {
+      keys.forEach(function(key){
+        if (configs[key]) request[key] = configs[key];
+      });
+    }
+    if ($auth.token) {
+      if (configs.auth !== false) {
+        request.headers = request.headers || {};
+        request.headers[$authConfig.headerKey] = configs.token || $authConfig.headerPrefix+$auth.token;        
+      }
+    }
+    return $http(request);
   }
 }]);
