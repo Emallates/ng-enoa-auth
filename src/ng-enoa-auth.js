@@ -133,11 +133,10 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
 
   function Request(method, url, data, configs) {
     configs.headers = configs.headers || {};
-    if (config.auth === false) return config;
-    if ($auth.token) {
+    if ($auth.token && (config.auth !== false)) {
       config.headers[$authConfig.headerKey] = $authConfig.headerPrefix+$auth.token;
     }
-
+    
     return $http({
       url: url,
       data: data,
@@ -157,6 +156,5 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
       uploadEventHandlers: configs.uploadEventHandlers
     })
   }
-
 
 }])
