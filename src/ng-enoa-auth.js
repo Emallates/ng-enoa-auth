@@ -9,7 +9,7 @@
 **/
 var mod = angular.module('ng-enoa-auth', []);
 // mod.config(['$httpProvider', function($httpProvider) { $httpProvider.interceptors.push('TokenInterceptor'); }]);
-mod.provider("$authConfig", function () {
+mod.provider("$authConfig",[ function () {
 	var _DATA = {
 	  _PREFIX: 'enoa'
 	  , _KEY: 'ng-auth'
@@ -18,8 +18,9 @@ mod.provider("$authConfig", function () {
 	  , headerKey: 'Authorization'
 	  , headerPrefix: 'Bearer '
 	  , onAuthFail: angular.noop
-	};
-	function reset(){
+	}
+
+	function reset() {
 		_DATA.key = _DATA._PREFIX+':'+_DATA._KEY;
 		_DATA.token = _DATA._PREFIX+':'+_DATA._TOKEN;
 	} reset();
@@ -28,12 +29,17 @@ mod.provider("$authConfig", function () {
     setKey: function (key) { _DATA._KEY = key; reset(); },
     setToken: function (token) { _DATA._TOKEN = token; reset(); },
     setPrefix: function (prefix) { _DATA._PREFIX = prefix; reset();},
-    setAuthFail: function (fun) { if(typeof fun == 'function') _DATA.onAuthFail = fun; else console.log('Usage:setAuthFail parameter must be a function'); },
+    setAuthFail: function (fun) { 
+      if(typeof fun == 'function'){
+        _DATA.onAuthFail = fun;
+      } else 
+      console.log('Usage:setAuthFail parameter must be a function');
+    },
     setHeaderKey: function (token) { _DATA.headerKey = token; },
     setHeaderPrefix: function (prefix) { _DATA.headerPrefix = prefix; },
     $get: function () { return _DATA; }
   }
-});
+}]);
 
 mod.factory('$auth', ['$rootScope', '$authConfig', 'store', function($rootScope, $authConfig, store){
 	return {
@@ -123,7 +129,7 @@ mod.factory('httpService', ['$http', '$auth', '$authConfig', function ($http, $a
       return Request('DELETE', url, null, configs)
     },
     'jsonp': function(url, configs) {
-      return Request('JSONP', url, null configs)
+      return Request('JSONP', url, null, configs)
     },
     'patch': function(url, data, configs) {
       return Request('PATCH', url, configs)
